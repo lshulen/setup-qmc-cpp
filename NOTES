@@ -1,0 +1,45 @@
+We would like to be able to do the following:
+   1. specify things directly on the command line like before
+   2. read xml snippets and then override their values
+      2A For example: --dmcblock dmc.xml --dmctstep 0.01
+      2B Think about format for jastrows.  Probably do the following: --onebodyjastrowblock Be Beonebody.xml.
+         There is a difficulty with how to addess those parameters though: Probably stick with only being able
+	 to globally change jastrow parameters.
+      2C In order to do this, we will need to be able to hand xmlNodes to the various constructors.
+         Be careful here about memory leaks!!!
+   3. point the code to where an optimization was done and then have it use that determine the "optimal" wavefunction
+   4. With regards to how the code is set up to generate qmcpack input files, probably best to just have
+      an option like --qmcinputfile and then after all of the options changing things about the particleset,
+      wavefunction and the like, just have it do --qmcaction a b c... where a is the number of the action, b is the
+      type of the action, and then everything in c are options to be handled by the type of action listed in b,
+      and this is terminated by the next qmcaction block
+
+   5. Think about creating a atomlibrary type of xml file
+      <atomlibrary>
+        <atom elementType="Symbol" isAllElectron="yes/no" ppHash="md5sum">
+	  <jastrow type="OneBody" function="Bspline">
+	    <correlation elementType="Symbol" cusp="xxx" size="xxx" rcut="xxx">
+	      <coefficients ....>
+	      </coefficients>
+            </correlation>
+          </jastrow>
+	  <jastrow type="OneBody" function="pade2">
+	    <correlation...>
+	      <coefficients ... >
+	      </coefficients>
+            </correlation>
+          </jastrow>
+	  <jastrow type="eeI" function="polynomial">
+	    <correlation ...>
+	      <coefficients ..>
+	      </coefficients>
+	    </correlation>
+	  </jastrow>
+          <hybrid>
+	    <parameter name="cutoff_radius>xxx</parameter>
+	    <parameter name="spline_radius>xxx</parameter>
+	    <parameter name="spline_npoints>xxx</parameter>
+	    <parameter name="lmax">xxx</parameter>
+	  </hybrid>
+	</atom>
+      </atomlibrary>
