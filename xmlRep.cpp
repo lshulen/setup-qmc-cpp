@@ -120,10 +120,13 @@ string xmlNode::getString(int indentLevel) const {
   return ss.str();
 }
 
+// this doesn't work at all
+// what if there are no xml comments but there is an xml declaration (currently nothing happens)
+// 
 void xmlNode::stripcomments(stringstream& ss) const {
   stringstream ss2;
-  const string& contents = stripXmlDeclaration(ss);
-  //  const string& contents(ss.str());
+  const string contents = stripXmlDeclaration(ss);
+  ss.str(contents);
   int inComment = 0;
   
   int commentStart = -1;
@@ -145,7 +148,7 @@ void xmlNode::stripcomments(stringstream& ss) const {
 
 string xmlNode::stripXmlDeclaration(stringstream& ss) const {
   if (ss.str().find("<?") == 0) {
-    return getNextTag(ss, 1);
+    getNextTag(ss, 1);
   }
   return ss.str();
 }
@@ -287,6 +290,7 @@ string xmlNode::getNextTagGroup(stringstream& ss, int removeFromSS) const {
     // search for the closing tag
     string name = getTagName(openingTag);
     int level = 1;
+
     remainder.str(ss.str());
     getNextTag(remainder, 1);
     charactersRemoved += openingTag.size();

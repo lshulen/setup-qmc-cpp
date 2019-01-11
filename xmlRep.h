@@ -35,16 +35,25 @@ public:
   // note this is somewhat dangerous.  Will die if an attribute with that name is not found
   // but, if the conversion to the specified type using a stringstream is not good, you will get garbage
   template<typename T>
-  T getAttribute(const std::string& name) const {
+  void getAttribute(const std::string& name, T& result) const {
     std::string value = attributes[getAttributeIndex(name, 1)].value;
     std::stringstream ss(value);
-    T retval;
-    ss >> retval;
-    return retval;
+    ss >> result;
+  }
+  template<typename T>
+  void getAttribute(const char* name, T& result) const {
+    std::string sname(name);
+    return getAttribute(sname, result);
   }
     
   int getNumAttributes() const { return attributes.size(); }
   int getNumChildren() const { return children.size(); }
+
+  template<typename T>
+  void getValue(T& result) const {
+    std::stringstream ss(value);
+    ss >> result;
+  } 
 
   template<typename T, typename TT> void addAttribute(const T& n, const TT& v) {
     std::stringstream ss1;
